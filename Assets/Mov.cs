@@ -10,12 +10,19 @@ public class Mov : MonoBehaviour
     [SerializeField] private float Changespeed;
     [SerializeField] private float FallSpeed;
     private Vector3 Desired;
-    
+    public static Transform Player;
+
 
     private Rigidbody r;
     // Start is called before the first frame update
+    private void OnEnable()
+    {
+        Player = this.transform;
+    }
+
     void Start()
     {
+        
         r = GetComponent<Rigidbody>();
     }
 

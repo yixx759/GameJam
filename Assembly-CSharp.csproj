@@ -41,9 +41,9 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
+     <Compile Include="Assets\Rotator.cs" />
      <Compile Include="Assets\Mov.cs" />
      <Compile Include="Assets\ReSpawn1.cs" />
-     <Compile Include="Assets\Rotator.cs" />
      <Reference Include="UnityEngine">
      <HintPath>E:\Program Files\Unity\Hub\Editor\2021.3.13f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
      </Reference>

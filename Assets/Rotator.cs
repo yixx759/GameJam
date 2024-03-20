@@ -28,7 +28,7 @@ public class Rotator : MonoBehaviour
 
         PLR.rotation = Quaternion.Slerp(upright, down, rotatorT*rotatorT*rotatorT);
 
-
+      
 
     }
 }

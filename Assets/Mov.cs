@@ -9,8 +9,10 @@ public class Mov : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private float Changespeed;
     [SerializeField] private float FallSpeed;
+    [SerializeField] private float WalkThreshold;
     private Vector3 Desired;
     public static Transform Player;
+    private Animator aRef;
 
 
     private Rigidbody r;
@@ -18,11 +20,12 @@ public class Mov : MonoBehaviour
     private void OnEnable()
     {
         Player = this.transform;
+        
     }
 
     void Start()
     {
-        
+        aRef = GetComponent<Animator>();
         r = GetComponent<Rigidbody>();
     }
 
@@ -54,7 +57,15 @@ public class Mov : MonoBehaviour
 
         r.velocity = vel;
 
-
+        
+        //if fallling dont do walk and set animation speed based on velocity
+        
+        Vector2 movq = new Vector2(r.velocity.x, r.velocity.z);
+        bool walk = movq.magnitude > WalkThreshold;
+        
+            aRef.SetBool("Walking",walk );
+            
+        print(walk);
 
 
 

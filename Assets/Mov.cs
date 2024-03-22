@@ -28,6 +28,8 @@ public class Mov : MonoBehaviour
     [SerializeField]private float camspeedx;
     [SerializeField]private float camspeedy;
     [SerializeField]private float radius;
+    [SerializeField]private float FixedCamYOffset;
+    [SerializeField]private bool FixedCam;
     public static Transform Player;
     private Animator aRef;
     private const float hpi = Mathf.PI / 2;
@@ -50,7 +52,7 @@ public class Mov : MonoBehaviour
      
         aRef = GetComponent<Animator>();
         r = GetComponent<Rigidbody>();
-        Camx = -Mathf.PI + 0.1f;
+        Camx = -Mathf.PI/2 + 0.1f;
     }
 
     private void OnCollisionEnter(Collision other)
@@ -64,24 +66,27 @@ public class Mov : MonoBehaviour
     
     private void OnCollisionExit(Collision other)
     {
-        if (other.GetContact(0).normal.y >0.9f)
-        {
-            onGround = false;
-
-        }
+        // if (other.GetContact(0).normal.y >0.9f)
+        // {
+        //     onGround = false;
+        //
+        // }
     }
 
     // Update is called once per frame
     void Update()
     {
+        Vector3 dynamicCam;
+        Vector3 staticCam;
         Vector2 D = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
 
 
+        //cache this
+        Vector3 c = new Vector3(0,GetComponent<CapsuleCollider>().bounds.extents.y,0);
 
         Desired = new Vector3(D.normalized.x, 0, D.normalized.y)*speed;
         //copy before rotating maybe or rotate after use
 
-        
         float tocheck = Camy - Input.GetAxis("Mouse Y") * camspeedy;
         float tocheck1 = Camx - Input.GetAxis("Mouse X")*camspeedx;
        
@@ -99,15 +104,19 @@ public class Mov : MonoBehaviour
             
         }
 
+        //Maybe if this away when not neede if less expensive than breaking pipeline
+        
         Rotaions rots;
         rots = new Rotaions()
             { CosX = Mathf.Cos(Camx), CosY = Mathf.Cos(Camy), SinX = Mathf.Sin(Camx), SinY = Mathf.Sin(Camy) };
         float time = Time.deltaTime;
-         Vector3 c = new Vector3(0,GetComponent<CapsuleCollider>().bounds.extents.y,0);
-        Cam.position = (transform.position +c)+
-                        (new Vector3(rots.CosX * rots.CosY, rots.SinY,
-                            rots.SinX * rots.CosY ) * radius);
+        dynamicCam = (transform.position +c)+
+                       (new Vector3(rots.CosX * rots.CosY, rots.SinY,
+                           rots.SinX * rots.CosY ) * radius);
+            staticCam = transform.position + new Vector3(0, FixedCamYOffset, 0);
+            Cam.transform.position = Vector3.Lerp(dynamicCam, staticCam, Rotator.CamInterpo * Rotator.CamInterpo* Rotator.CamInterpo);
 
+    
         Cam.rotation = Quaternion.LookRotation((transform.position + c) - Cam.position, Vector3.up);
 
     }
@@ -133,10 +142,12 @@ public class Mov : MonoBehaviour
         
         
         
-        //then do cam
-        //steal from git
-        //then facial controller
         
+        //rotate with camera
+        //find school
+        //do soem cut scenes
+        //fix respawn
+        //have animation complete by ground have speed be 1 until floor
         
         
         
@@ -145,18 +156,18 @@ public class Mov : MonoBehaviour
         float t = Mathf.Clamp01(Mathf.InverseLerp(0, SpeedIncreaseT, movq.magnitude));
 
         //aRef.speed = t;
-        aRef.speed = onGround ? t : 1;
+        aRef.speed = !Rotator.falling ? t : 1;
 //        print(t);
-        if (movq.magnitude > WalkThreshold)
+        if (movq.magnitude > WalkThreshold && !Rotator.falling)
         {
-            print(Desired);
+        //    print(Desired);
             if (Desired.z <= 0.01f && Desired.z >= -0.01f )
             {
                 
                 aRef.SetBool("Walking",false );
                 if (Desired.x > 0.1f)
                 {
-                    print("bong");
+                   // print("bong");
                     aRef.SetBool("Right",true );
                     aRef.SetBool("Left",false );
                     
@@ -164,7 +175,7 @@ public class Mov : MonoBehaviour
                 }
                 else if(Desired.x < -0.1f)
                 {
-                    print("bing");
+//                    print("bing");
                     aRef.SetBool("Right",false );
                     aRef.SetBool("Left",true );
                     
@@ -181,7 +192,7 @@ public class Mov : MonoBehaviour
             }
             else
             {
-                print("walking");
+              //  print("walking");
                 aRef.SetBool("Walking",true );
                 aRef.SetBool("Right",false );
                 aRef.SetBool("Left",false );

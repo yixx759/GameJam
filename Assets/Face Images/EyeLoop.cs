@@ -39,7 +39,7 @@ public class EyeLoop : MonoBehaviour
                 t = 0;
            
                 eyeMat.SetTexture("_MainTex", imgs[(counter++)%counterL]);
-                print((counter) % counterL);
+//                print((counter) % counterL);
 
             }
 

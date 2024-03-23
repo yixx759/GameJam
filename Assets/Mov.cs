@@ -36,7 +36,7 @@ public class Mov : MonoBehaviour
     private float Camx = 0;
     private float Camy = 0;
 
-
+    private Vector3 nuDesired;
     private Rigidbody r;
 
     private bool onGround = false;
@@ -85,10 +85,11 @@ public class Mov : MonoBehaviour
         Vector3 c = new Vector3(0,GetComponent<CapsuleCollider>().bounds.extents.y,0);
 
         Desired = new Vector3(D.normalized.x, 0, D.normalized.y)*speed;
+        nuDesired = transform.rotation*Desired;
         //copy before rotating maybe or rotate after use
 
         float tocheck = Camy - Input.GetAxis("Mouse Y") * camspeedy;
-        float tocheck1 = Camx - Input.GetAxis("Mouse X")*camspeedx;
+        Camx = Camx - Input.GetAxis("Mouse X")*camspeedx;
        
         if (tocheck <= hpi-hpi/4 && tocheck > 0)
         {
@@ -97,12 +98,7 @@ public class Mov : MonoBehaviour
             
         }
         
-        if (tocheck1 >= -Mathf.PI && tocheck1 < 0)
-        {
-         
-            Camx = tocheck1; 
-            
-        }
+      
 
         //Maybe if this away when not neede if less expensive than breaking pipeline
         
@@ -114,11 +110,29 @@ public class Mov : MonoBehaviour
                        (new Vector3(rots.CosX * rots.CosY, rots.SinY,
                            rots.SinX * rots.CosY ) * radius);
             staticCam = transform.position + new Vector3(0, FixedCamYOffset, 0);
-            Cam.transform.position = Vector3.Lerp(dynamicCam, staticCam, Rotator.CamInterpo * Rotator.CamInterpo* Rotator.CamInterpo);
+            Cam.transform.position = Vector3.Lerp(dynamicCam, staticCam, Rotator.CamInterpo );
 
     
-        Cam.rotation = Quaternion.LookRotation((transform.position + c) - Cam.position, Vector3.up);
+        Cam.rotation = Quaternion.Slerp(Quaternion.LookRotation((transform.position + c) - Cam.position, Vector3.up),Quaternion.Euler(90,0,0),Rotator.CamInterpo );
 
+        //do other wau
+        Vector3 cF = new Vector3(Cam.forward.x, 0, Cam.forward.z);
+        if (cF.magnitude < 0.0001f)
+        {
+            cF = Vector3.forward;
+        }
+
+        ;
+        
+
+        transform.rotation = Quaternion.Slerp(Quaternion.LookRotation(cF, Vector3.up), Quaternion.Euler(new Vector3(0,1f,0)),Rotator.CamInterpo  );
+
+            
+       
+
+       //check it rotates dont interfere
+        Debug.DrawLine(transform.position, transform.position+transform.forward*3, Color.blue);
+        Debug.DrawLine(transform.position, transform.position+cF*3, Color.red);
     }
 
     private void FixedUpdate()
@@ -127,9 +141,9 @@ public class Mov : MonoBehaviour
         Vector3 vel = r.velocity;
 
 
-        vel = new Vector3(Mathf.MoveTowards(vel.x, Desired.x, Changespeed * Time.deltaTime), Mathf.Clamp(vel.y,-FallSpeed,FallSpeed),
-            Mathf.MoveTowards(vel.z, Desired.z, Changespeed * Time.deltaTime));
-
+        vel = new Vector3(Mathf.MoveTowards(vel.x, nuDesired.x, Changespeed * Time.deltaTime), Mathf.Clamp(vel.y,-FallSpeed,FallSpeed),
+            Mathf.MoveTowards(vel.z, nuDesired.z, Changespeed * Time.deltaTime));
+    
 
         r.velocity = vel;
 
@@ -143,11 +157,13 @@ public class Mov : MonoBehaviour
         
         
         
-        //rotate with camera
+      
+        //fix side ways use pre rot desired create copy
         //find school
         //do soem cut scenes
         //fix respawn
         //have animation complete by ground have speed be 1 until floor
+        //dynamic speed is causing weird animation so make more specific
         
         
         

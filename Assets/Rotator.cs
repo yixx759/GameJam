@@ -16,7 +16,7 @@ public class Rotator : MonoBehaviour
     private Quaternion upright;
     private Animator aRef;
     private float swapTimer = 0;
-   private static float swapTimerLim = 2.4f;
+   private static float swapTimerLim = 3.4f;
 
     public static bool falling = false;
     // Start is called before the first frame update

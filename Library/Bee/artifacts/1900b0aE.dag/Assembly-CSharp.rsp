@@ -354,10 +354,13 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Face Images/EyeLoop.cs"
+"Assets/LUT/PostLUT.cs"
 "Assets/Mov.cs"
 "Assets/ReSpawn1.cs"
 "Assets/Rotator.cs"
 "Assets/RotMov.cs"
+"Assets/VolLight/MakeShadowGlobal.cs"
+"Assets/VolLight/Volumetric.cs"
 -langversion:9.0
 
 /deterministic

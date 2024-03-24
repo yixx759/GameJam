@@ -46,7 +46,15 @@
      <Compile Include="Assets\Mov.cs" />
      <Compile Include="Assets\ReSpawn1.cs" />
      <Compile Include="Assets\Face Images\EyeLoop.cs" />
+     <Compile Include="Assets\VolLight\MakeShadowGlobal.cs" />
+     <Compile Include="Assets\VolLight\Volumetric.cs" />
+     <Compile Include="Assets\LUT\PostLUT.cs" />
+     <None Include="Assets\LUT\LUT.shader" />
      <None Include="Assets\Face Images\Eyes.shader" />
+     <None Include="Assets\VolLight\Shadow.shader" />
+     <None Include="Assets\School\Blinn.shader" />
+     <None Include="Assets\SkySeries Freebie\Hdri setup.txt" />
+     <None Include="Assets\School\Light.cginc" />
      <Reference Include="UnityEngine">
      <HintPath>E:\Program Files\Unity\Hub\Editor\2021.3.13f1\Editor\Data\Managed\UnityEngine\UnityEngine.dll</HintPath>
      </Reference>
